@@ -79,6 +79,8 @@ def simple_auth(username, password):
 
 
 if os.getenv("AUTH_PASSWORD") is not None:
-    page.launch(show_api=False, show_tips=False, auth=simple_auth)
+    page.launch(
+        server_name="0.0.0.0", show_api=False, show_tips=False, auth=simple_auth
+    )
 else:
-    page.launch(show_api=False, show_tips=False)
+    page.launch(server_name="0.0.0.0", show_api=False, show_tips=False)
