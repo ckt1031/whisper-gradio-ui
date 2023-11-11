@@ -15,11 +15,15 @@ def get_result(filepath, model_type, transform_mode):
         base_url=os.getenv("OPENAI_API_BASE") + "/v1",
     )
 
-    audio_file = open(filepath, "rb")
+    with open(filepath, "rb") as audio_file:
+        audio_file = audio_file.read()
 
-    if transform_mode == "Transcriptions":
-        result = client.audio.transcriptions.create(file=audio_file, model="whisper-1")
+        if transform_mode == "Transcriptions":
+            result = client.audio.transcriptions.create(
+                file=audio_file, model="whisper-1"
+            )
+            return [result, result["text"]]
+
+        result = client.audio.translations.create(file=audio_file, model="whisper-1")
+
         return [result, result["text"]]
-
-    result = client.audio.translations.create(file=audio_file, model="whisper-1")
-    return [result, result["text"]]
