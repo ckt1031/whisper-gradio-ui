@@ -9,6 +9,8 @@ def get_result(filepath, model_type, transform_mode):
         # Make unimplemented error
         return
 
+    print(filepath)
+
     client = OpenAI(
         # defaults to os.environ.get("OPENAI_API_KEY")
         api_key=os.getenv("OPENAI_API_KEY"),
@@ -16,14 +18,12 @@ def get_result(filepath, model_type, transform_mode):
     )
 
     with open(filepath, "rb") as audio_file:
-        audio_file = audio_file.read()
-
         if transform_mode == "Transcriptions":
             result = client.audio.transcriptions.create(
                 file=audio_file, model="whisper-1"
             )
-            return [result, result["text"]]
+            return [result.model_dump_json(), result.text]
 
         result = client.audio.translations.create(file=audio_file, model="whisper-1")
 
-        return [result, result["text"]]
+        return [result.model_dump_json(), result.text]
